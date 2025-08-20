@@ -10,12 +10,12 @@
   <% if (locals.currentUser) {%>
     <h2>WELCOME BACK <%= currentUser.username %></h1>
     <a href="/logout"><button>Logout</button></a>
+    <a href="/upload"><button>Upload a file</button></a>
   <% } else { %>
     <h2>please log in</h1>
     <a href="/login"><button>Log In</button></a>
     <a href="/sign-up"><button>Create Account</button></a>
   <%}%>
-  <a href="/upload"><button>Upload a file</button></a>
   <a href="/folder/1"><button>Browse files</button></a>
 </body>
 </html>

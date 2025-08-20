@@ -12,7 +12,7 @@ const postSignUp = [
     .isLength({ min: 1, max: 50 }).withMessage('Username name must be between 1 and 50 characters.')
     .custom(async (value) => {
       // update check
-      const user = await prisma.users.findUnique({
+      const user = await prisma.user.findUnique({
         where: {
           username: value,
         },
@@ -37,7 +37,7 @@ const postSignUp = [
     const { username, password } = req.body;
     const password_hash = await bcrypt.hash(password, 10);
     // update create
-    await prisma.users.create({
+    await prisma.user.create({
       data: {
         username: username,
         password: password_hash,
