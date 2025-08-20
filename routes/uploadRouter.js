@@ -1,9 +1,10 @@
+const { isAuth } = require('../middleware/authMiddleware');
 const { Router } = require('express');
 const uploadController = require('../controllers/uploadController');
 
 const uploadRouter = Router();
 
-uploadRouter.get('/', uploadController.getUpload);
-uploadRouter.post('/', uploadController.postUpload);
+uploadRouter.get('/', isAuth, uploadController.getUpload);
+uploadRouter.post('/', isAuth, uploadController.postUpload);
 
 module.exports = uploadRouter;
