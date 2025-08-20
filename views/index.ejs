@@ -8,12 +8,13 @@
 <body>
   <h1>Home</h1>
   <% if (locals.currentUser) {%>
-    <h1>WELCOME BACK <%= currentUser.username %></h1>
+    <h2>WELCOME BACK <%= currentUser.username %></h1>
     <a href="/logout"><button>Logout</button></a>
   <% } else { %>
-    <h1>please log in</h1>
+    <h2>please log in</h1>
     <a href="/login"><button>Log In</button></a>
     <a href="/sign-up"><button>Create Account</button></a>
   <%}%>
+  <a href="/upload"><button>Upload a file</button></a>
 </body>
 </html>

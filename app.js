@@ -10,6 +10,7 @@ const bcrypt = require("bcryptjs");
 const loginRouter = require('./routes/loginRouter');
 const logoutRouter = require('./routes/logoutRouter');
 const signUpRouter = require('./routes/signUpRouter');
+const uploadRouter = require('./routes/uploadRouter');
 const indexRouter = require('./routes/indexRouter');
 
 const app = express();
@@ -80,6 +81,7 @@ passport.deserializeUser(async (id, done) => {
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 app.use('/sign-up', signUpRouter);
+app.use('/upload', uploadRouter);
 app.use('/', indexRouter);
 
 const PORT = 3000;
