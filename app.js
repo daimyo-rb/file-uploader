@@ -11,6 +11,7 @@ const loginRouter = require('./routes/loginRouter');
 const logoutRouter = require('./routes/logoutRouter');
 const signUpRouter = require('./routes/signUpRouter');
 const uploadRouter = require('./routes/uploadRouter');
+const folderRouter = require('./routes/folderRouter');
 const indexRouter = require('./routes/indexRouter');
 
 const app = express();
@@ -44,7 +45,7 @@ app.use((req, res, next) => {
 passport.use(
   new LocalStrategy(async (username, password, done) => {
     try {
-      const user = await prisma.users.findUnique({
+      const user = await prisma.user.findUnique({
         where: {
           username: username,
         },
@@ -67,7 +68,7 @@ passport.serializeUser((user, done) => {
 });
 passport.deserializeUser(async (id, done) => {
   try {
-    const user = await prisma.users.findUnique({
+    const user = await prisma.user.findUnique({
       where: {
         id: id,
       },
@@ -82,6 +83,7 @@ app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);
 app.use('/sign-up', signUpRouter);
 app.use('/upload', uploadRouter);
+app.use('/folder', folderRouter);
 app.use('/', indexRouter);
 
 const PORT = 3000;

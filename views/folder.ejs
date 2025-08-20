@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Folder</title>
+</head>
+<body>
+  <%- include("partials/errors.ejs") %>
+  <% if (locals.errors) { %>
+    <a href="/folder/1"><button>Go to root folder</button></a>
+  <%} else {%>
+    <h1><%= folder.name %></h1>
+    <% if (childFolders.length > 0) {%>
+      <h2>Child Folders:</h2>
+      <!-- foreach -->
+    <%}%>
+    <% if (childFiles.length > 0) {%>
+      <h2>Child Files:</h2>
+      <!-- foreach -->
+    <%}%>
+    <button>Create new folder</button>
+    <br>
+    <button>Upload file to this folder</button>
+  <%}%>
+</body>
+</html>
