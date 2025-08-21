@@ -13,7 +13,10 @@
     <h1><%= folder.name %></h1>
     <% if (childFolders.length > 0) {%>
       <h2>Child Folders:</h2>
-      <!-- foreach -->
+      <% folder.childFolders.forEach(function(childFolder) { %>
+        <a href="/folder/<%= childFolder.id %>"><button><%= childFolder.name %></button></a>
+        <p></p>
+      <%})%>
     <%}%>
     <% if (childFiles.length > 0) {%>
       <h2>Child Files:</h2>
@@ -22,6 +25,10 @@
     <a href="/folder/create-folder?parentId=<%= folder.id %>"><button>Create new folder</button></a>
     <br>
     <button>Upload file to this folder</button>
+  <%}%>
+  <br>
+  <% if (folder.id != 1) { %>
+    <a href="/folder/<%= folder.parentId %>"><button>Go to parent</button></a>
   <%}%>
   <br>
   <a href="/"><button>Go Home</button></a>
