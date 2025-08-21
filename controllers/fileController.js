@@ -1,18 +1,12 @@
-require('dotenv').config();
 const path = require('node:path');
 const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 const { body, validationResult } = require("express-validator");
-const { isAlphanumeric, doesFolderWithIdExist} = require('../utils/utils');
+const { deleteFileById, isAlphanumeric } = require('../utils/utils');
 const multer = require('multer');
-const { createClient } = require('@supabase/supabase-js');
 const { v4: uuidv4 } = require('uuid');
-const bucketName = 'main-bucket';
+const { supabase, bucketName } = require('../config/supabase');
 
-const supabase = createClient(
-  process.env.SUPABASE_URL,
-  process.env.SUPABASE_KEY
-);
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
@@ -54,7 +48,7 @@ const postUpload = [
         name: file.originalname,
         size: req.file.size,
         folderId: Number(parentId),
-        accessUrl: `/uploads/${publicUrlData.publicUrl}`,
+        accessUrl: `${publicUrlData.publicUrl}`,
       },
     })
     res.redirect(`/folder/${parentId}`);
@@ -97,27 +91,27 @@ const postUpdateFile = [
         { errors: errors.array(), file: { name: oldName, id: fileId }, oldName }
       );
     }
-    // update file
     await prisma.file.update({
       where: {
         id: Number(fileId),
       },
       data: {
-        name: req.body.name
+        name: name
       },
     })
-    // go back to details of file
-    res.redirect(`/file/${fileId}`);
+    res.redirect(`/file/${fileId}`); // go back to file details
   }
 ]
 
 async function getDeleteFile(req, res) {
-  await prisma.file.delete({
-    where: {
-      id: Number(req.params.fileId),
-    },
-  })
-  res.redirect('/folder/1');
+  try {
+    const fileId = req.params.fileId;
+    deleteFileById(fileId);
+    res.redirect('/folder/1');
+  } catch (err) {
+    console.log('Delete error: ', err);
+    return res.status(500).send('Internal server error');
+  }
 }
 
 module.exports = {

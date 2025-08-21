@@ -1,7 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
-const { isAlphanumeric, doesFolderWithIdExist} = require('../utils/utils');
+const { deleteFileById, isAlphanumeric, doesFolderWithIdExist} = require('../utils/utils');
 
 async function getFolder(req, res) {
   const folderId = Number(req.params.folderId);
@@ -118,6 +118,15 @@ async function recursiveDelete(folderId) {
 
   for (const child of childFolders) {
     await recursiveDelete(child.id);
+  }
+
+  const childFiles = await prisma.file.findMany({
+    where: { folderId: folderId },
+    select: { id: true },
+  });
+
+  for (const child of childFiles) {
+    await deleteFileById(child.id);
   }
 
   await prisma.file.deleteMany({
