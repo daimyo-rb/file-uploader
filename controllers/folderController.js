@@ -1,6 +1,7 @@
 const { body, validationResult } = require("express-validator");
 const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
+const { isAlphanumeric, doesFolderWithIdExist} = require('../utils/utils');
 
 async function getFolder(req, res) {
   const folderId = Number(req.params.folderId);
@@ -42,25 +43,6 @@ async function getCreateFolder(req, res) {
     })
   }
   res.render('create-folder', { parentId: parent.id, name: parent.name });
-}
-
-function isAlphanumeric(value) {
-  if (/[^a-zA-Z0-9]/.test(value)) {
-    throw new Error('Folder name must contain only letters and numbers.');
-  }
-  return true;
-}
-
-async function doesFolderWithIdExist(id) {
-  const folder = await prisma.folder.findUnique({
-    where: {
-      id: Number(id)
-    },
-  })
-  if (!folder) {
-    throw new Error('parent folder does not exist');
-  }
-  return true;
 }
 
 const postCreateFolder = [
