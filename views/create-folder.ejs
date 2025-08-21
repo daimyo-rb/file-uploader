@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create Folder</title>
+</head>
+<body>
+  <h1>Create a folder</h1>
+  <h3>inside <%= name %></h3>
+  <%- include("partials/errors.ejs") %>
+  <form method="POST" action="/folder/create-folder">
+    <input type="hidden" name="parentId" value="<%= parentId %>">
+    <input type="hidden" name="oldName" value="<%= name %>">
+    <label for="name">Name:</label>
+    <input type="text" name="name">
+    <br>
+    <button>Submit</button>
+  </form>
+</body>
+</html>

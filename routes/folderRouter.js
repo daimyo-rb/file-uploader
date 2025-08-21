@@ -3,6 +3,8 @@ const folderController = require('../controllers/folderController');
 
 const folderRouter = Router();
 
+folderRouter.get('/create-folder', folderController.getCreateFolder);
+folderRouter.post('/create-folder', folderController.postCreateFolder);
 folderRouter.get('/:folderId', folderController.getFolder);
 
 module.exports = folderRouter;
