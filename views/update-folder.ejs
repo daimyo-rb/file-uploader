@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update Folder</title>
+</head>
+<body>
+  <h1>Update folder: <%= name %></h1>
+  <%- include("partials/errors.ejs") %>
+  <form method="POST" action="/folder/<%= folderId %>/edit">
+    <input type="hidden" name="folderId" value="<%= folderId %>">
+    <input type="hidden" name="oldName" value="<%= oldName %>">
+    <label for="name">New name:</label>
+    <input type="text" name="name" id="name">
+    <br>
+    <button>Submit</button>
+  </form>
+  <a href="/folder/<%= folderId %>"><button>Go back</button></a>
+</body>
+</html>
