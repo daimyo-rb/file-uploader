@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File info</title>
+</head>
+<body>
+  <h1>File info:</h1>
+  <p>Name: <%= file.name %></p>
+  <p>Size: <%= file.size %>B</p>
+  <p>Created at: <%= file.createdAt %></p>
+  <p>Folder Id: <%= file.folderId %></p>
+  <a href="/folder/<%= file.folderId %>"><button>Go to parent</button></a>
+  <a href="/"><button>Go to root</button></a>
+</body>
+</html>

@@ -46,7 +46,18 @@ const postUpload = [
   }
 ]
 
+async function getFile(req, res) {
+  const fileId = req.params.fileId;
+  const file = await prisma.file.findUnique({
+    where: {
+      id: Number(fileId),
+    },
+  })
+  res.render('file', { file });
+}
+
 module.exports = {
   getUpload,
-  postUpload
+  postUpload,
+  getFile
 }

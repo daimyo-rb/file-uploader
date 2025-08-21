@@ -6,5 +6,6 @@ const fileRouter = Router();
 
 fileRouter.get('/upload', isAuth, fileController.getUpload);
 fileRouter.post('/upload', isAuth, fileController.postUpload);
+fileRouter.get('/:fileId', fileController.getFile);
 
 module.exports = fileRouter;
