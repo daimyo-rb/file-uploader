@@ -1,20 +1,20 @@
+require('dotenv').config();
 const path = require('node:path');
 const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
 const { body, validationResult } = require("express-validator");
 const { isAlphanumeric, doesFolderWithIdExist} = require('../utils/utils');
 const multer = require('multer');
+const { createClient } = require('@supabase/supabase-js');
+const { v4: uuidv4 } = require('uuid');
+const bucketName = 'main-bucket';
 
-const upload = multer({
-  dest: path.join(__dirname, '../uploads'),
-  fileFiler: (req, file, cb) => {
-    const parentId = req.body.parentId;
-    if (!doesFolderWithIdExist(parentId)) {
-      return cb(new errorMonitor('Invalid parent folder'));
-    }
-    cb(null, true);
-  }
-});
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_KEY
+);
+const storage = multer.memoryStorage();
+const upload = multer({ storage });
 
 async function getUpload(req, res) {
   const parentId = Number(req.query.parentId) || 1;
@@ -34,13 +34,27 @@ async function getUpload(req, res) {
 const postUpload = [
   upload.single('uploadedFile'), // upload to filesystem
   async function (req, res) {
+    const file = req.file;
+    const fileExt = file.originalname.split('.').pop();
+    const fileName = `${uuidv4()}.${fileExt}`;
+
+    const { data, error } = await supabase.storage
+      .from(bucketName)
+      .upload(`uploads/${fileName}`, file.buffer, {
+        contentType: file.mimetype,
+      });
+    if (error) return res.status(500).send(error);
+    const { data: publicUrlData } = supabase.storage
+      .from(bucketName)
+      .getPublicUrl(`uploads/${fileName}`);
+    res.send(`File uploaded to ${publicUrlData.publicUrl}`);
     const { parentId } = req.body
     await prisma.file.create({
       data: {
-        name: req.file.originalname,
+        name: file.originalname,
         size: req.file.size,
         folderId: Number(parentId),
-        accessUrl: `/uploads/${req.file.filename}`,
+        accessUrl: `/uploads/${publicUrlData.publicUrl}`,
       },
     })
     res.redirect(`/folder/${parentId}`);
