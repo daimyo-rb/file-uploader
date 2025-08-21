@@ -27,8 +27,10 @@
   <%}%>
   <hr>
   <a href="/"><button>Go Home</button></a>
+
   <% if (locals.folder) {%>
     <% if (folder.id != 1) { %>
+      <a href="/folder/<%= folder.id %>/delete"><button>Delete Folder</button></a>
       <a href="/folder/<%= folder.parentId %>"><button>Go to parent</button></a>
       <a href="/folder/1"><button>Go to root</button></a>
     <%}%>

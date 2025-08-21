@@ -110,10 +110,37 @@ const postUpdateFolder = [
   }
 ]
 
+async function recursiveDelete(folderId) {
+  const childFolders = await prisma.folder.findMany({
+    where: { parentId: folderId },
+    select: { id: true },
+  });
+
+  for (const child of childFolders) {
+    await recursiveDelete(child.id);
+  }
+
+  await prisma.file.deleteMany({
+    where: { folderId },
+  });
+
+  if (folderId != 1) {
+    await prisma.folder.delete({
+      where: { id: folderId },
+    });
+  }
+}
+
+async function getDeleteFolder(req, res) { // recursive delete
+  await recursiveDelete(Number(req.params.folderId));
+  res.redirect('/folder/1');
+}
+
 module.exports = {
   getFolder,
   getCreateFolder,
   postCreateFolder,
   getUpdateFolder,
-  postUpdateFolder
+  postUpdateFolder,
+  getDeleteFolder
 }
