@@ -84,6 +84,7 @@ app.use('/logout', logoutRouter);
 app.use('/sign-up', signUpRouter);
 app.use('/file', fileRouter);
 app.use('/folder', folderRouter);
+app.use('/uploads', express.static('uploads'));
 app.use('/', indexRouter);
 
 const PORT = 3000;
