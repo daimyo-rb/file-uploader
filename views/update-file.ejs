@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Update File</title>
+</head>
+<body>
+  <h1>Update file: <%= file.name %></h1>
+  <%- include("partials/errors.ejs") %>
+  <form method="POST" action="/file/<%= file.id %>/edit">
+    <input type="hidden" name="oldName" value="<%= oldName %>">
+    <label for="name">New name:</label>
+    <input type="text" name="name" id="name">
+    <br>
+    <button>Submit</button>
+  </form>
+  <a href="/file/<%= file.id %>"><button>Go back</button></a>
+</body>
+</html>

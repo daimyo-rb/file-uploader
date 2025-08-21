@@ -12,6 +12,7 @@
   <p>Created at: <%= file.createdAt %></p>
   <p>Folder Id: <%= file.folderId %></p>
   <p>Url: <%= file.accessUrl %></p>
+  <a href="/file/<%= file.id %>/edit"><button>Rename file</button></a>
   <a href="<%= file.accessUrl %>"><button type="button">Download</button></a>
   <br>
   <a href="/folder/<%= file.folderId %>"><button>Go to parent</button></a>

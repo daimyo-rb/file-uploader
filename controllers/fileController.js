@@ -1,7 +1,8 @@
 const path = require('node:path');
 const { PrismaClient } = require('../generated/prisma');
 const prisma = new PrismaClient();
-const { doesFolderWithIdExist} = require('../utils/utils');
+const { body, validationResult } = require("express-validator");
+const { isAlphanumeric, doesFolderWithIdExist} = require('../utils/utils');
 const multer = require('multer');
 
 const upload = multer({
@@ -56,8 +57,50 @@ async function getFile(req, res) {
   res.render('file', { file });
 }
 
+async function getUpdateFile(req, res) {
+  const id = req.params.fileId;
+  const file = await prisma.file.findUnique({
+    where: {
+      id: Number(id),
+    },
+  })
+  if (!file) {
+    res.redirect('/folder/1');
+  }
+  res.render('update-file', { file, oldName: file.name });
+}
+
+const postUpdateFile = [
+  body('name').trim()
+    .isLength({ min: 1, max: 100 }).withMessage('File name must be between 1 and 100 characters.')
+    .custom(isAlphanumeric),
+  async (req, res) => {
+    const fileId = req.params.fileId;
+    const errors = validationResult(req);
+    const { name, oldName } = req.body;
+    if (!errors.isEmpty()) {
+      return res.render('update-file',
+        { errors: errors.array(), file: { name: oldName, id: fileId }, oldName }
+      );
+    }
+    // update file
+    await prisma.file.update({
+      where: {
+        id: Number(fileId),
+      },
+      data: {
+        name: req.body.name
+      },
+    })
+    // go back to details of file
+    res.redirect(`/file/${fileId}`);
+  }
+]
+
 module.exports = {
   getUpload,
   postUpload,
-  getFile
+  getFile,
+  getUpdateFile,
+  postUpdateFile
 }
