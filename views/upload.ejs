@@ -6,8 +6,10 @@
   <title>Upload</title>
 </head>
 <body>
-  <h1>Upload a file</h1>
-  <form method="POST" action="upload" enctype="multipart/form-data">
+  <h1>Upload a file to <%= parentName %></h1>
+  <%- include("partials/errors.ejs") %>
+  <form method="POST" action="/file/upload" enctype="multipart/form-data">
+    <input type="hidden" name="parentId" value="<%= parentId %>">
     <input type="file" name="uploadedFile">
     <br>
     <button>Submit</button>

@@ -17,17 +17,21 @@
     <%})%>
     <hr>
     <h2>Child Files:</h2>
-    <!-- foreach -->
+    <% folder.childFiles.forEach(function(childFile) { %>
+      <a href="/file/<%= childFile.id %>"><button><%= childFile.name %></button></a>
+    <%})%>
     <hr>
     <a href="/folder/<%=folder.id%>/edit"><button>Rename Folder</button></a>
     <a href="/folder/create-folder?parentId=<%= folder.id %>"><button>Create new folder</button></a>
-    <button>Upload file to this folder</button>
+    <a href="/file/upload?parentId=<%= folder.id %>"><button>Upload file to this folder</button></a>
   <%}%>
   <hr>
   <a href="/"><button>Go Home</button></a>
-  <% if (folder.id != 1) { %>
-    <a href="/folder/<%= folder.parentId %>"><button>Go to parent</button></a>
-    <a href="/folder/1"><button>Go to root</button></a>
+  <% if (locals.folder) {%>
+    <% if (folder.id != 1) { %>
+      <a href="/folder/<%= folder.parentId %>"><button>Go to parent</button></a>
+      <a href="/folder/1"><button>Go to root</button></a>
+    <%}%>
   <%}%>
 </body>
 </html>
