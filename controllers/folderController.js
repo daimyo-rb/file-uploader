@@ -65,30 +65,16 @@ async function doesFolderWithIdExist(id) {
 
 const postCreateFolder = [
   body('parentId').trim()
-    .custom(async (value) => { // check if in db
-      const parent = await prisma.folder.findUnique({
-        where: {
-          id: Number(value)
-        },
-      })
-      if (!parent) {
-        throw new Error('parent folder does not exist');
-      }
-    }),
+    .custom(doesFolderWithIdExist), // make sure parent exists
   body('name').trim()
     .isLength({ min: 1, max: 100 }).withMessage('Folder name must be between 1 and 100 characters.')
-    .custom((value) => {
-      if (/[^a-zA-Z0-9]/.test(value)) {
-        throw new Error('Folder name must contain only letters and numbers.');
-      }
-      return true;
-    }),
+    .custom(isAlphanumeric),
   async (req, res) => {
     const errors = validationResult(req);
     const { parentId, name, oldName } = req.body;
     if (!errors.isEmpty()) {
       return res.render(`create-folder`,
-        { errors: errors.array(), parentId, name: oldName }
+        { errors: errors.array(), parentId, name: oldName, oldName }
       );
     }
     await prisma.folder.create({
