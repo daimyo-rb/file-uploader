@@ -97,10 +97,20 @@ const postUpdateFile = [
   }
 ]
 
+async function getDeleteFile(req, res) {
+  await prisma.file.delete({
+    where: {
+      id: Number(req.params.fileId),
+    },
+  })
+  res.redirect('/folder/1');
+}
+
 module.exports = {
   getUpload,
   postUpload,
   getFile,
   getUpdateFile,
-  postUpdateFile
+  postUpdateFile,
+  getDeleteFile
 }
